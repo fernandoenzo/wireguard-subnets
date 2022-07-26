@@ -7,7 +7,7 @@ from setuptools import find_packages
 
 name = 'wireguard-subnets'
 
-version = '1.0.1'
+version = '1.0.2'
 
 description = "This program performs unattended addition and removal of remote subnets accessible through its `wg` interface " \
               "to a WireGuard server's routing table.\nWorks great combined with systemd."

@@ -18,8 +18,12 @@ def header(title: str):
     return f' {hyphens}\n  {title}\n {hyphens}'
 
 
-def run_command(command):
-    return subprocess.run(command, capture_output=True, start_new_session=True, text=True)
+def run_command(command, systemd=False):
+    cmd = []
+    if systemd:
+        cmd = ['systemd-run', '--scope', '--quiet']
+    cmd.extend(command)
+    return subprocess.run(cmd, capture_output=True, start_new_session=True, text=True)
 
 
 def create_thread(func: Callable, *args: Any, **kwargs: Any) -> Future:

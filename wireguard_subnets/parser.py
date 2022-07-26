@@ -11,6 +11,7 @@ class ARGS:
     PERIOD = None
     METRIC = None
     IPS_SUBNETS = None
+    SYSTEMD = None
 
 
 class CustomArgumentFormatter(ArgumentDefaultsHelpFormatter, RawTextHelpFormatter):

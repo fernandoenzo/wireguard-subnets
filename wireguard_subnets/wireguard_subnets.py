@@ -29,27 +29,27 @@ signal.signal(signal.SIGINT, close)
 
 
 def link_up():
-    ret = run_command(['ip', 'link', 'show', ARGS.INTERFACE])
+    ret = run_command(['ip', 'link', 'show', ARGS.INTERFACE], systemd=ARGS.SYSTEMD)
     return not ret.returncode
 
 
 def ping(ip: Union[IPv4Address, IPv6Address]):
-    ret = run_command(['ping', '-W5', '-c3', '-I', ARGS.INTERFACE, str(ip)])
+    ret = run_command(['ping', '-W5', '-c3', '-I', ARGS.INTERFACE, str(ip)], systemd=ARGS.SYSTEMD)
     return not ret.returncode
 
 
 def add_subnet(subnet: Union[IPv4Network, IPv6Network]):
-    ret = run_command(['ip', 'route', 'add', str(subnet), 'dev', ARGS.INTERFACE, 'scope', 'link', 'metric', str(ARGS.METRIC)])
+    ret = run_command(['ip', 'route', 'add', str(subnet), 'dev', ARGS.INTERFACE, 'scope', 'link', 'metric', str(ARGS.METRIC)], systemd=ARGS.SYSTEMD)
     return not ret.returncode
 
 
 def remove_subnet(subnet: Union[IPv4Network, IPv6Network]):
-    ret = run_command(['ip', 'route', 'del', str(subnet), 'dev', ARGS.INTERFACE])
+    ret = run_command(['ip', 'route', 'del', str(subnet), 'dev', ARGS.INTERFACE], systemd=ARGS.SYSTEMD)
     return not ret.returncode
 
 
 def subnet_exists(subnet: Union[IPv4Network, IPv6Network]):
-    ret = run_command(['ip', 'route', 'show', str(subnet), 'dev', ARGS.INTERFACE])
+    ret = run_command(['ip', 'route', 'show', str(subnet), 'dev', ARGS.INTERFACE], systemd=ARGS.SYSTEMD)
     return not ret.returncode and bool(ret.stdout)
 
 
@@ -80,6 +80,7 @@ def main():
         print('This program must be run with root privileges.')
         sys.exit(0)
     parse_args()
+    ARGS.SYSTEMD = not run_command(['pidof', 'systemd'], systemd=False).returncode
     print(header('WireGuard Subnets'))
     print(f'Interface: {ARGS.INTERFACE}\nRecheck period: {ARGS.PERIOD}s\nMetric: {ARGS.METRIC}\nSubnets: ')
     collections.deque(print(f'  • {subnet} behind {ip}') for ip_subnets in ARGS.IPS_SUBNETS for ip, subnets in ip_subnets.items() for subnet in subnets)
