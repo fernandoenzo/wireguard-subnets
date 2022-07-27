@@ -129,7 +129,7 @@ To make the service to start at system boot, execute:
 sudo systemctl enable wireguard-subnets.service
 ```
 
-To watch the program progress:
+To watch the program log:
 
 ```commandline
 sudo journalctl -u wireguard-subnets.service -f
